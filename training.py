@@ -27,11 +27,7 @@ def train_model():
     #use this logistic regression for training
     
     data_path = os.path.join(dataset_csv_path, dataset_file)
-    
     train = pd.read_csv(data_path)
-    
-
-
     
     y = train[target]
     X = train.drop([target],axis=1)

@@ -28,8 +28,6 @@ def merge_multiple_dataframe():
     
     output_path = os.path.join(output_folder_path,output_file)
     
-    
-
     if os.path.isfile(output_path):
         final_dataframe = pd.read_csv(output_path)
     else:
