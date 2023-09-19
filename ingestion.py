@@ -28,14 +28,15 @@ def merge_multiple_dataframe():
     
     output_path = os.path.join(output_folder_path,output_file)
     
-    ingestion_database = os.path.join(database_path,sys.argv[0][:-3]+'.db')
+    
 
     if os.path.isfile(output_path):
         final_dataframe = pd.read_csv(output_path)
     else:
         final_dataframe = pd.DataFrame()
     
-    conn = sqlite3.connect(ingestion_database)
+    database = os.path.join(database_path,sys.argv[0][:-3]+'.db')
+    conn = sqlite3.connect(database)
     c = conn.cursor()
     
     for file in os.listdir(input_folder_path):
@@ -49,8 +50,8 @@ def merge_multiple_dataframe():
                 final_dataframe=final_dataframe.append(df)
                 
             c.execute(
-                "INSERT INTO ingestion (name, location, date, output) VALUES (?, ?, ?, ?)",
-                (path, input_folder_path, str(datetime.now()), output_path))
+                "INSERT INTO ingestion (name, location, date, size, output) VALUES (?, ?, ?, ?, ?)",
+                (file, input_folder_path, str(datetime.now()),len(df), output_path))
             conn.commit()
     
     conn.close()

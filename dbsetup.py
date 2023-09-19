@@ -10,8 +10,8 @@ database_path = config["database_path"]
 if not os.path.exists(database_path):
     os.makedirs(database_path)
 
-ingestion_database = os.path.join(database_path,'ingestion.db')
-with sqlite3.connect(ingestion_database) as conn:
+database = os.path.join(database_path,'ingestion.db')
+with sqlite3.connect(database) as conn:
     cursor = conn.cursor()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS ingestion
@@ -21,3 +21,12 @@ with sqlite3.connect(ingestion_database) as conn:
     conn.commit()
 
 
+database = os.path.join(database_path,'scoring.db')
+with sqlite3.connect(database) as conn:
+    cursor = conn.cursor()
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS scoring
+              (id INTEGER PRIMARY KEY, model_name TEXT, data_location TEXT,
+               model_location TEXT, date TEXT, f1_score REAL)""")
+              
+    conn.commit()
