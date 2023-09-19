@@ -3,6 +3,7 @@ import os
 import json
 from datetime import datetime
 import sqlite3
+import sys
 
 
 
@@ -13,25 +14,28 @@ with open('config.json','r') as f:
 
 input_folder_path = config['input_folder_path']
 output_folder_path = config['output_folder_path']
-
-if not os.path.isdir(output_folder_path):
-    os.mkdir(output_folder_path)
-
+output_file = config["output_file"]
+database_path = config["database_path"]
 
 
 
 #############Function for data ingestion
-def merge_multiple_dataframe(output_file="finaldata.csv"):
+def merge_multiple_dataframe():
     #check for datasets, compile them together, and write to an output file
     
-    output_file = os.path.join(output_folder_path,output_file)
+    if not os.path.isdir(output_folder_path):
+        os.mkdir(output_folder_path)
+    
+    output_path = os.path.join(output_folder_path,output_file)
+    
+    ingestion_database = os.path.join(database_path,sys.argv[0][:-3]+'.db')
 
-    if os.path.isfile(output_file):
-        final_dataframe = pd.read_csv(output_file)
+    if os.path.isfile(output_path):
+        final_dataframe = pd.read_csv(output_path)
     else:
         final_dataframe = pd.DataFrame()
     
-    conn = sqlite3.connect('ingestion.db')
+    conn = sqlite3.connect(ingestion_database)
     c = conn.cursor()
     
     for file in os.listdir(input_folder_path):
@@ -46,12 +50,12 @@ def merge_multiple_dataframe(output_file="finaldata.csv"):
                 
             c.execute(
                 "INSERT INTO ingestion (name, location, date, output) VALUES (?, ?, ?, ?)",
-                (path, input_folder_path, str(datetime.now()), output_file))
+                (path, input_folder_path, str(datetime.now()), output_path))
             conn.commit()
     
     conn.close()
     final_dataframe.drop_duplicates(inplace=True)            
-    final_dataframe.to_csv(output_file,index=False)
+    final_dataframe.to_csv(output_path,index=False)
     
 
 
