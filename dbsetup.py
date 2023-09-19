@@ -30,3 +30,13 @@ with sqlite3.connect(database) as conn:
                model_location TEXT, date TEXT, f1_score REAL)""")
               
     conn.commit()
+    
+database = os.path.join(database_path,'diagnostics.db')
+with sqlite3.connect(database) as conn:
+    cursor = conn.cursor()
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS diagnostics
+              (id INTEGER PRIMARY KEY, prediction TEXT, scoring TEXT,
+               summarystats TEXT, diagnostics TEXT, date TEXT)""")
+              
+    conn.commit()

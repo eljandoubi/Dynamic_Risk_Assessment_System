@@ -12,8 +12,8 @@ import json
 with open('config.json','r') as f:
     config = json.load(f) 
 
-dataset_csv_path = os.path.join(config['output_folder_path']) 
-model_path = os.path.join(config['output_model_path'])
+dataset_csv_path = config['output_folder_path']
+model_path = config['output_model_path']
 dataset_file = config["output_file"]
 database_path = config["database_path"]
 target = config["target"]

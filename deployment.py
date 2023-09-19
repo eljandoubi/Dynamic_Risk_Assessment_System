@@ -10,8 +10,8 @@ from datetime import datetime
 with open('config.json','r') as f:
     config = json.load(f) 
 
-model_path = os.path.join(config['output_model_path'])
-prod_deployment_path = os.path.join(config['prod_deployment_path']) 
+model_path = config['output_model_path']
+prod_deployment_path = config['prod_deployment_path']
 database_path = config["database_path"]
 
 ####################function for deployment

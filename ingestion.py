@@ -3,7 +3,6 @@ import os
 import json
 from datetime import datetime
 import sqlite3
-import sys
 
 
 
@@ -33,7 +32,7 @@ def merge_multiple_dataframe():
     else:
         final_dataframe = pd.DataFrame()
     
-    database = os.path.join(database_path,sys.argv[0][:-3]+'.db')
+    database = os.path.join(database_path,'ingestion.db')
     conn = sqlite3.connect(database)
     c = conn.cursor()
     

@@ -7,5 +7,6 @@
  "database_path": "sql_databse",
  "target": "exited",
  "deploy_name": "trainedmodel.pkl",
- "test_file":"testdata.csv"
+ "test_file":"testdata.csv",
+ "plot_name":"confusionmatrix.png"
  }

@@ -5,15 +5,13 @@ from sklearn import metrics
 import json
 from datetime import datetime
 import sqlite3
-import sys
-
 
 #################Load config.json and get path variables
 with open('config.json','r') as f:
     config = json.load(f) 
     
     
-model_path = os.path.join(config['output_model_path'])
+model_path = config['output_model_path']
 dataset_file = config["output_file"]
 database_path = config["database_path"]
 test_data_path = config["test_data_path"]
@@ -51,7 +49,7 @@ def score_model():
     
     time = str(datetime.now())
     
-    database = os.path.join(database_path,sys.argv[0][:-3]+'.db')
+    database = os.path.join(database_path,'scoring.db')
     with sqlite3.connect(database) as conn:
         cursor = conn.cursor()
         
@@ -59,6 +57,8 @@ def score_model():
             "INSERT INTO scoring (model_name, data_location, model_location, date, f1_score) VALUES (?, ?, ?, ?, ?)",
             (model_name, test_path, model_save, time, score))
         conn.commit()
+        
+    return score
         
 if __name__ == '__main__':
     score_model()
