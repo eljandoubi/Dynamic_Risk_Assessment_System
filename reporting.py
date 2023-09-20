@@ -29,9 +29,10 @@ def score_model():
     test_path = os.path.join(test_data_path,test_file)
     test = pd.read_csv(test_path)
     y_true = test[target]
+    X = test.drop([target],axis=1)
     del test
     
-    y_pred = model_predictions()
+    y_pred = model_predictions(X)
 
     cm = metrics.confusion_matrix(y_true, y_pred)
 

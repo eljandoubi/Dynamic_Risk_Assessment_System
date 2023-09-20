@@ -3,6 +3,11 @@ import json
 import os
 import sqlite3
 from datetime import datetime
+from app import app
+from multiprocessing import Process
+
+server = Process(target=app.run)
+server.start()
 
 
 with open('config.json','r') as f:
@@ -23,8 +28,6 @@ URL = "http://127.0.0.1:5000"
 
 #Call each API endpoint and store the responses
 response1 = requests.post(URL+"/prediction", files=files)
-
-
 response2 = requests.get(URL+"/scoring")  #put an API call here
 response3 = requests.get(URL+"/summarystats") #put an API call here
 response4 = requests.get(URL+"/diagnostics") #put an API call here
@@ -41,8 +44,11 @@ database = os.path.join(database_path,'diagnostics.db')
 with sqlite3.connect(database) as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO diagnostics (prediction, scoring, summarystats, diagnostics, date) VALUES (?, ?, ?, ?, ?)",
+            """INSERT INTO diagnostics (prediction, scoring, summarystats,
+            diagnostics, date) VALUES (?, ?, ?, ?, ?)""",
             responses)
         conn.commit()
 
 
+server.terminate()
+server.join()

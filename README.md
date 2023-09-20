@@ -8,3 +8,7 @@
 * Move to folder ```cd Dynamic_Risk_Assessment_System```
 * pip install -r requirements.txt
     
+# Get started
+
+* To run the Process use ```python fullprocess.py```
+* To check the databse use ```python db_test.py [database_name]``` where database_name can be ingestion, scoring or diagnostics

@@ -40,8 +40,10 @@ def store_model_into_pickle():
                 row[4]=str(datetime.now())
                 
                 cursor.execute(
-                    "INSERT INTO scoring (model_name, data_location, model_location, date, f1_score) VALUES (?, ?, ?, ?, ?)",
-                    row[1:])
+                    """INSERT OR IGNORE INTO scoring (model_name, data_location,
+                    model_location, date, f1_score, deployed) VALUES 
+                (?, ?, ?, ?, ?, 1)""",
+                    row[1:-1])
                 conn.commit()
 
         

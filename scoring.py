@@ -5,6 +5,7 @@ from sklearn import metrics
 import json
 from datetime import datetime
 import sqlite3
+import sys
 
 #################Load config.json and get path variables
 with open('config.json','r') as f:
@@ -25,8 +26,10 @@ test_file = config["test_file"]
 def score_model():
     #this function should take a trained model, load test data, and calculate an F1 score for the model relative to the test data
     #it should write the result to the latestscore.txt file
-
-    test_path = os.path.join(test_data_path,test_file)
+    if len(sys.argv)==2:
+        test_path = sys.argv[1]
+    else:
+        test_path = os.path.join(test_data_path,test_file)
     
     test = pd.read_csv(test_path)
     
@@ -35,13 +38,15 @@ def score_model():
     
     del test
     
-    model_save = os.path.join(model_path,deploy_name)
+    if len(sys.argv)==3:
+        model_save = sys.argv[2]
+    else:
+        model_save = os.path.join(model_path,deploy_name)
     
     with open(model_save, 'rb') as file:
         pipeline = pickle.load(file)
         
     model_name = pipeline.steps[-1][0]
-    
     
     y_pred = pipeline.predict(X)
     
@@ -54,11 +59,12 @@ def score_model():
         cursor = conn.cursor()
         
         cursor.execute(
-            "INSERT INTO scoring (model_name, data_location, model_location, date, f1_score) VALUES (?, ?, ?, ?, ?)",
+            """INSERT OR IGNORE INTO scoring (model_name, data_location, model_location,
+            date, f1_score, deployed) VALUES (?, ?, ?, ?, ?, 0)""",
             (model_name, test_path, model_save, time, score))
         conn.commit()
         
     return score
         
 if __name__ == '__main__':
-    score_model()
+    print(score_model())

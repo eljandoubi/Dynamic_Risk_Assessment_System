@@ -16,7 +16,8 @@ with sqlite3.connect(database) as conn:
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS ingestion
               (id INTEGER PRIMARY KEY, name TEXT, location TEXT,
-               date TEXT, size INTEGER, details TEXT, output TEXT)""")
+               date TEXT, size INTEGER, details TEXT, output TEXT,
+               UNIQUE (name, location, output))""")
               
     conn.commit()
 
@@ -27,7 +28,8 @@ with sqlite3.connect(database) as conn:
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS scoring
               (id INTEGER PRIMARY KEY, model_name TEXT, data_location TEXT,
-               model_location TEXT, date TEXT, f1_score REAL)""")
+               model_location TEXT, date TEXT, f1_score REAL, deployed BOOLEAN,
+               UNIQUE(model_name,model_location,f1_score,deployed))""")
               
     conn.commit()
     

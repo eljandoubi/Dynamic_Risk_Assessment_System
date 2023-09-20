@@ -11,6 +11,7 @@ import sqlite3
 with open('config.json','r') as f:
     config = json.load(f) 
 
+
 input_folder_path = config['input_folder_path']
 output_folder_path = config['output_folder_path']
 output_file = config["output_file"]
@@ -47,7 +48,8 @@ def merge_multiple_dataframe():
                 final_dataframe=final_dataframe.append(df)
                 
             c.execute(
-                "INSERT INTO ingestion (name, location, date, size, output) VALUES (?, ?, ?, ?, ?)",
+                """INSERT OR IGNORE INTO ingestion 
+                (name, location, date, size, output) VALUES (?, ?, ?, ?, ?)""",
                 (file, input_folder_path, str(datetime.now()),len(df), output_path))
             conn.commit()
     
